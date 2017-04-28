@@ -3,7 +3,7 @@ DEPENDENCIES = psh.h
 
 all: psh
 
-psh: psh.o
+psh: psh.o shell.o
 	gcc ${FLAGS} -o $@ $^
 
 %.o: %.c ${DEPENDENCIES}
