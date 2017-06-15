@@ -3,8 +3,14 @@
 #include <string.h>
 
 // Calls for dependencies
-#include "psh.h"
+#include "pshell.h"
 
 void main_shell(){
-  
+
+  char *a = malloc(sizeof(char) * MAXLINE);
+  while (1){
+    scanf("%s", a);
+
+  }
+
 }

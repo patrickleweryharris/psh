@@ -1,11 +1,12 @@
 #include <stdio.h>
-#include "psh.h"
+#include <stdlib.h>
+#include <string.h>
 
-int main(int argc, char **argv) {
-  if (argc != 1){
-    printf("Usage: ./psh \n");
-    return 0;
-  }
+// Calls for dependencies
+#include "pshell.h"
+
+int main(int argc, char const *argv[]) {
+  /* code */
   main_shell();
   return 0;
 }
