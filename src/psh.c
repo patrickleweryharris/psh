@@ -6,7 +6,6 @@
 #include "pshell.h"
 
 int main(int argc, char const *argv[]) {
-  /* code */
   main_shell();
   return 0;
 }

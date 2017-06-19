@@ -17,7 +17,10 @@ void main_shell(){
   FILE *out_file = malloc(sizeof(FILE));
   char *cmd = malloc(sizeof(char) * MAXLINE);
   char *args = malloc(sizeof(char) * MAXDATA);
-  // TODO need to error check all of these mallocs
+  if (buf == NULL || user_input == NULL || in_file == NULL || out_file == NULL || cmd == NULL || args == NULL){
+    perror("malloc");
+    exit(1);
+  }
 
   while (1){
     scanf("%s", user_input);
@@ -60,9 +63,6 @@ void main_shell(){
     }
 
     else if (f == 0){ // child
-
-      // Setting up input and output redirection in the event that those options are used
-      // FIXME May move these to a seperate method in the future
       if (in_file != NULL){
         close(fd[1]);
         dup2(fd[0], STDIN_FILENO);
@@ -80,6 +80,7 @@ void main_shell(){
         }
       }
 
+      // Command execution
       if (execvp(cmd, &args) == -1){
         perror("exec");
         exit(1);
@@ -94,15 +95,4 @@ void main_shell(){
       exit(1);
     }
   }
-}
-
-/* Parse the command into three seperate parts:
- * 1. The command
- * 2. The output file for stdout to go to (optional) -> Set to NULL if not applicable
- * 3. The input file for stdin to come from (optional) -> Set to NULL if not applicable
- */
-int parser(char *user_input, FILE *in_file, FILE *out_file, char *base_cmd, char *args){
-  // TODO
-
-  return NORM;
 }
