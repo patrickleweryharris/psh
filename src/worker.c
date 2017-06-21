@@ -24,7 +24,7 @@ void main_shell(){
 
   while (1){
     scanf("%s", user_input);
-    command_type = parser(user_input, in_file, out_file, cmd, args);
+    parser(user_input, in_file, out_file, cmd, args);
 
     if (pipe(fd) == -1){
       perror("pipe");

@@ -12,15 +12,15 @@
 #define MAXLINE 128
 #define MAXDATA 1024
 
-#define NORM 0
-#define OUT 1
-#define IN 2
-#define INOUT 3
-#define PIPE 4
-#define INOUTPIPE 5
+// File redirection operators
+#define F_OUT 0 // >
+#define F_IN 1 // <
+#define NO_REDIR 2 // No rediction occurs
+#define OUT_FIRST 3 // Out redir first, in next
+#define IN_FIRST 4 // In redir first, out next
 
 void main_shell();
 
-int parser(char *user_input, FILE *in_file, FILE *out_file, char *base_cmd, char *args);
+void parser(char *user_input, FILE *in_file, FILE *out_file, char *base_cmd, char *args);
 
 #endif // _PSH_H_
