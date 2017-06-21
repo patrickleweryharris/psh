@@ -15,7 +15,7 @@ int which_first(char *input);
  * 2. The output file for stdout to go to (optional) -> Set to NULL if not applicable
  * 3. The input file for stdin to come from (optional) -> Set to NULL if not applicable
  */
-void parser(char *user_input, FILE *in_file, FILE *out_file, char *base_cmd, char *args){
+int parser(char *user_input, FILE *in_file, FILE *out_file, char *base_cmd, char *args){
 
   /* This method assumes a structure for a command
    * $ cmd args {file redirection}
@@ -32,8 +32,9 @@ void parser(char *user_input, FILE *in_file, FILE *out_file, char *base_cmd, cha
    switch (command_type) {
     case NO_REDIR:
       strncpy(args, buff, sizeof(char) * MAXDATA);
-      in_file = NULL; // Not sure this will set out_file to something out of scope
-      out_file = NULL;
+      // in_file = NULL; // Not sure this will set out_file to something out of scope
+      // out_file = NULL;
+      break;
 
     case F_IN:
       buff = strtok(NULL, "<");
@@ -61,6 +62,8 @@ void parser(char *user_input, FILE *in_file, FILE *out_file, char *base_cmd, cha
       in_file = fopen(buff, "r");
       out_file = fopen(user_input, "w");
    }
+
+   return command_type;
 
 }
 

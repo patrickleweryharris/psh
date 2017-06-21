@@ -21,6 +21,6 @@
 
 void main_shell();
 
-void parser(char *user_input, FILE *in_file, FILE *out_file, char *base_cmd, char *args);
+int parser(char *user_input, FILE *in_file, FILE *out_file, char *base_cmd, char *args);
 
 #endif // _PSH_H_

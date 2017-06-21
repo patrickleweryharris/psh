@@ -24,7 +24,7 @@ void main_shell(){
 
   while (1){
     scanf("%s", user_input);
-    parser(user_input, in_file, out_file, cmd, args);
+    command_type = parser(user_input, in_file, out_file, cmd, args);
 
     if (pipe(fd) == -1){
       perror("pipe");
@@ -33,7 +33,7 @@ void main_shell(){
 
     if ((f = fork()) > 0){ // parent
 
-      if (in_file != NULL){
+      if (command_type == F_IN || command_type == OUT_FIRST || command_type == IN_FIRST){
         // Write contents of in_file to buffer
         int read_b = fread(&buf, sizeof(char) * MAXDATA, 1, in_file);
         if (read_b == 0){
@@ -63,13 +63,13 @@ void main_shell(){
     }
 
     else if (f == 0){ // child
-      if (in_file != NULL){
+      if (command_type == F_IN || command_type == OUT_FIRST || command_type == IN_FIRST){
         close(fd[1]);
         dup2(fd[0], STDIN_FILENO);
         close(fd[0]);
       }
 
-      if (out_file != NULL){
+      if (command_type == F_OUT || command_type == OUT_FIRST || command_type == IN_FIRST){
         if (dup2(fileno(out_file), STDOUT_FILENO) == -1){
           perror("dup2");
           exit(1);
