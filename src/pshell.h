@@ -21,6 +21,6 @@
 
 void main_shell();
 
-int parser(char *user_input, FILE *in_file, FILE *out_file, char *base_cmd, char *args);
+int which_first(char *input);
 
 #endif // _PSH_H_

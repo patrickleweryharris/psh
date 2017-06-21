@@ -24,7 +24,45 @@ void main_shell(){
 
   while (1){
     scanf("%s", user_input);
-    command_type = parser(user_input, in_file, out_file, cmd, args);
+    char *buff = malloc(sizeof(char) * MAXDATA);
+    buff = strtok(user_input, " ");
+    strncpy(cmd, buff, sizeof(char) * MAXLINE);
+
+    command_type = which_first(user_input);
+    switch (command_type) {
+     case NO_REDIR:
+       strncpy(args, buff, sizeof(char) * MAXDATA);
+       // in_file = NULL; // Not sure this will set out_file to something out of scope
+       // out_file = NULL;
+       break;
+
+     case F_IN:
+       buff = strtok(NULL, "<");
+       strncpy(args, buff, sizeof(char) * MAXDATA);
+       out_file = NULL;
+       in_file = fopen(user_input, "r");
+
+     case F_OUT:
+       buff = strtok(NULL, ">");
+       strncpy(args, buff, sizeof(char) * MAXDATA);
+       in_file = NULL;
+       out_file = fopen(user_input, "w");
+
+     case OUT_FIRST:
+       buff = strtok(NULL, ">");
+       strncpy(args, buff, sizeof(char) * MAXDATA);
+       buff = strtok(NULL, "<");
+       out_file = fopen(buff, "w");
+       in_file = fopen(user_input, "r");
+
+     case IN_FIRST:
+       buff = strtok(NULL, "<");
+       strncpy(args, buff, sizeof(char) * MAXDATA);
+       buff = strtok(NULL, ">");
+       in_file = fopen(buff, "r");
+       out_file = fopen(user_input, "w");
+    }
+
 
     if (pipe(fd) == -1){
       perror("pipe");
