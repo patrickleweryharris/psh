@@ -32,8 +32,8 @@ void main_shell(){
     switch (command_type) {
      case NO_REDIR:
        strncpy(args, buff, sizeof(char) * MAXDATA);
-       // in_file = NULL; // Not sure this will set out_file to something out of scope
-       // out_file = NULL;
+       in_file = NULL;
+       out_file = NULL;
        break;
 
      case F_IN:
@@ -41,12 +41,14 @@ void main_shell(){
        strncpy(args, buff, sizeof(char) * MAXDATA);
        out_file = NULL;
        in_file = fopen(user_input, "r");
+       break;
 
      case F_OUT:
        buff = strtok(NULL, ">");
        strncpy(args, buff, sizeof(char) * MAXDATA);
        in_file = NULL;
        out_file = fopen(user_input, "w");
+       break;
 
      case OUT_FIRST:
        buff = strtok(NULL, ">");
@@ -54,6 +56,7 @@ void main_shell(){
        buff = strtok(NULL, "<");
        out_file = fopen(buff, "w");
        in_file = fopen(user_input, "r");
+       break;
 
      case IN_FIRST:
        buff = strtok(NULL, "<");
@@ -61,6 +64,7 @@ void main_shell(){
        buff = strtok(NULL, ">");
        in_file = fopen(buff, "r");
        out_file = fopen(user_input, "w");
+       break;
     }
 
 
@@ -94,7 +98,6 @@ void main_shell(){
         if(WIFEXITED(status)) {
           if (WEXITSTATUS(status) != 0){ // The child ran into an error somewhere and hasn't been reported already
             fprintf(stderr, "Error encountered during command execution\n");
-            exit(1);
           }
         }
       }
