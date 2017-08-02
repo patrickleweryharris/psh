@@ -22,5 +22,6 @@
 void main_shell();
 
 int which_first(char *input);
+char **mkargs(char *args);
 
 #endif // _PSH_H_

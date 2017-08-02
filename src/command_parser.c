@@ -8,6 +8,9 @@
 
 #include "pshell.h"
 
+int which_first(char *input);
+char **mkargs(char *args);
+
 
 // Return which redirection operator occurs first in string input
 int which_first(char *input){
@@ -42,4 +45,29 @@ int which_first(char *input){
   }
 
   return status_code;
+}
+
+/*
+ * Returns an argument list for execvp from a string of arguments
+ */
+char **mkargs(char *args){
+
+  int array_size = 1;
+  for (int i = 0; i < strlen(args); i++){
+    if (args[i] == ' '){
+      array_size += 1;
+    }
+  }
+  char **ret_args = malloc(sizeof(char *) * array_size);
+
+  char *buff;
+  buff = strtok(args, " ");
+  int j = 0;
+  while (buff != NULL){
+    ret_args[j] = buff;
+    j++;
+    buff = strtok(NULL, " ");
+  }
+
+  return ret_args;
 }

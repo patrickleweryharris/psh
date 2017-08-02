@@ -122,7 +122,8 @@ void main_shell(){
       }
 
       // Command execution
-      if (execvp(cmd, &args) == -1){
+      char **split_args = mkargs(args);
+      if (execvp(cmd, split_args) == -1){
         perror("exec");
         exit(1);
       }
