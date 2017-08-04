@@ -64,6 +64,7 @@ char **mkargs(char *args){
   buff = strtok(args, " ");
   int j = 0;
   while (buff != NULL){
+    ret_args[j] = malloc(sizeof(char) * strlen(buff));
     ret_args[j] = buff;
     j++;
     buff = strtok(NULL, " ");
