@@ -51,24 +51,29 @@ int which_first(char *input){
  * Returns an argument list for execvp from a string of arguments
  */
 char **mkargs(char *args){
-
-  int array_size = 1;
-  for (int i = 0; i < strlen(args); i++){
-    if (args[i] == ' '){
-      array_size += 1;
+  char **ret_args = NULL;
+  char *buff = strtok(args, " ");
+  int n_words = 0;
+  while (buff){
+    ret_args = realloc(ret_args, sizeof(char*) * ++n_words);
+    if (ret_args == NULL){
+      perror("realloc");
+      exit(1);
     }
-  }
-  char **ret_args = malloc(sizeof(char *) * array_size);
 
-  char *buff;
-  buff = strtok(args, " ");
-  int j = 0;
-  while (buff != NULL){
-    ret_args[j] = malloc(sizeof(char) * strlen(buff));
-    ret_args[j] = buff;
-    j++;
+    ret_args[n_words - 1] = buff;
+
     buff = strtok(NULL, " ");
   }
+
+  ret_args = realloc(ret_args, sizeof(char*) * (n_words + 1));
+  ret_args[n_words] = 0;
+
+  // Utility to print args for testing purposes: 
+  // for(int i=0; i < (n_words + 1); i++){
+  //   printf ("args[%d] = %s\n", i, ret_args[i]);
+  // }
+
 
   return ret_args;
 }

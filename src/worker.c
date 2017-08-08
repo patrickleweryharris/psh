@@ -13,6 +13,7 @@ void main_shell(){
   int fd[2], f, status, command_type;
   char *buf = malloc(sizeof(char) * MAXDATA);
   char *user_input = malloc(sizeof(char) * MAXLINE);
+  char *input_to_modify = malloc(sizeof(char) * MAXLINE);
   FILE *in_file = malloc(sizeof(FILE));
   FILE *out_file = malloc(sizeof(FILE));
   char *cmd = malloc(sizeof(char) * MAXLINE);
@@ -23,9 +24,12 @@ void main_shell(){
   }
 
   while (1){
-    scanf("%s", user_input);
+    printf("> ");
+    fgets(user_input, MAXLINE, stdin);
+    user_input[strcspn(user_input, "\n")] = 0;
     char *buff = malloc(sizeof(char) * MAXDATA);
-    buff = strtok(user_input, " ");
+    strncpy(input_to_modify, user_input, sizeof(char) * MAXLINE);
+    buff = strtok(input_to_modify, " ");
     strncpy(cmd, buff, sizeof(char) * MAXLINE);
 
     command_type = which_first(user_input);
@@ -122,7 +126,7 @@ void main_shell(){
       }
 
       // Command execution
-      char **split_args = mkargs(args);
+      char **split_args = mkargs(user_input);
       if (execvp(cmd, split_args) == -1){
         perror("exec");
         exit(1);
