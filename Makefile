@@ -3,7 +3,7 @@ DEPENDENCIES = src/pshell.h
 
 all: psh
 
-psh: src/psh.o src/worker.o src/command_parser.o
+psh: src/psh.o src/worker.o src/command_parser.o src/special_functions.o
 	gcc ${FLAGS} -o $@ $^
 
 src/%.o: %.c ${DEPENDENCIES}

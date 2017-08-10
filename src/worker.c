@@ -24,13 +24,22 @@ void main_shell(){
   }
 
   while (1){
+    // Shell prompt
     printf("> ");
     fgets(user_input, MAXLINE, stdin);
+
+    // Input sanitization
     user_input[strcspn(user_input, "\n")] = 0;
     char *buff = malloc(sizeof(char) * MAXDATA);
     strncpy(input_to_modify, user_input, sizeof(char) * MAXLINE);
     buff = strtok(input_to_modify, " ");
     strncpy(cmd, buff, sizeof(char) * MAXLINE);
+
+
+    // Exit function
+    if (strncmp(cmd, "exit", 4) == 0){
+      exit(0);
+    }
 
     command_type = which_first(user_input);
     switch (command_type) {
@@ -108,6 +117,9 @@ void main_shell(){
     }
 
     else if (f == 0){ // child
+      // Check for special commands
+      special_functions(cmd);
+
       if (command_type == F_IN || command_type == OUT_FIRST || command_type == IN_FIRST){
         close(fd[1]);
         dup2(fd[0], STDIN_FILENO);

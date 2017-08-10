@@ -69,7 +69,7 @@ char **mkargs(char *args){
   ret_args = realloc(ret_args, sizeof(char*) * (n_words + 1));
   ret_args[n_words] = 0;
 
-  // Utility to print args for testing purposes: 
+  // Utility to print args for testing purposes:
   // for(int i=0; i < (n_words + 1); i++){
   //   printf ("args[%d] = %s\n", i, ret_args[i]);
   // }
