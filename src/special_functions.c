@@ -9,6 +9,7 @@ void print_license();
 void special_functions(char *cmd){
 
   char *info = "psh - Patrick's Shell. Type 'license' for copyright information";
+  char *version = "0.0.1";
 
   if (strncmp(cmd, "about", 5) == 0){
     printf("%s\n", info);
@@ -17,6 +18,11 @@ void special_functions(char *cmd){
 
   else if (strncmp(cmd, "license", 7) == 0){
     print_license();
+    exit(0);
+  }
+
+  else if (strncmp(cmd, "version", 7) == 0){
+    printf("%s\n", version);
     exit(0);
   }
 

@@ -11,3 +11,6 @@ src/%.o: %.c ${DEPENDENCIES}
 
 clean:
 	rm src/*.o psh
+
+run: psh
+	./psh
