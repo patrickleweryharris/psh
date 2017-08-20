@@ -10,14 +10,27 @@
 
 /* Run the psh shell */
 void main_shell(){
+  // Integers denote pipes, command types and statuses.
   int fd[2], f, status, command_type;
+
+  // Buffer for pipe
   char *buf = malloc(sizeof(char) * MAXDATA);
+
+  // Raw input
   char *user_input = malloc(sizeof(char) * MAXLINE);
+
+  // Copy of input that is modified during parsing
   char *input_to_modify = malloc(sizeof(char) * MAXLINE);
+
+  // Files for redirection
   FILE *in_file = malloc(sizeof(FILE));
   FILE *out_file = malloc(sizeof(FILE));
+
+  // The command and arguments
   char *cmd = malloc(sizeof(char) * MAXLINE);
   char *args = malloc(sizeof(char) * MAXDATA);
+
+  // Error checking
   if (buf == NULL || user_input == NULL || in_file == NULL || out_file == NULL || cmd == NULL || args == NULL){
     perror("malloc");
     exit(1);
@@ -28,7 +41,7 @@ void main_shell(){
     printf("> ");
     fgets(user_input, MAXLINE, stdin);
 
-    // Input sanitization
+    // Input sanitization. Any errors input by the user will result in command fail later, not dealt with here.
     user_input[strcspn(user_input, "\n")] = 0;
     char *buff = malloc(sizeof(char) * MAXDATA);
     strncpy(input_to_modify, user_input, sizeof(char) * MAXLINE);
@@ -36,12 +49,14 @@ void main_shell(){
     strncpy(cmd, buff, sizeof(char) * MAXLINE);
 
 
-    // Exit function
+    // Exit function. Needs to be before fork to allow entire program to exit
     if (strncmp(cmd, "exit", 4) == 0){
       exit(0);
     }
 
+    // Switch controls how the command is parsed based upon present file redirection operators
     command_type = which_first(user_input);
+    //printf("Command type: %i\n", command_type);
     switch (command_type) {
      case NO_REDIR:
        strncpy(args, buff, sizeof(char) * MAXDATA);
@@ -53,30 +68,38 @@ void main_shell(){
        buff = strtok(NULL, "<");
        strncpy(args, buff, sizeof(char) * MAXDATA);
        out_file = NULL;
-       in_file = fopen(user_input, "r");
+       strip_leading_space(buff);
+       in_file = fopen(buff, "r");
        break;
 
      case F_OUT:
        buff = strtok(NULL, ">");
+       //printf("%s\n", buff);
+       //printf("%s\n", input_to_modify);
        strncpy(args, buff, sizeof(char) * MAXDATA);
        in_file = NULL;
-       out_file = fopen(user_input, "w");
+       strip_leading_space(buff);
+       out_file = fopen(buff, "w");
        break;
 
      case OUT_FIRST:
        buff = strtok(NULL, ">");
+       strip_leading_space(buff);
+       out_file = fopen(buff, "w");
        strncpy(args, buff, sizeof(char) * MAXDATA);
        buff = strtok(NULL, "<");
-       out_file = fopen(buff, "w");
-       in_file = fopen(user_input, "r");
+       strip_leading_space(buff);
+       in_file = fopen(buff, "r");
        break;
 
      case IN_FIRST:
        buff = strtok(NULL, "<");
+       strip_leading_space(buff);
+       in_file = fopen(buff, "r");
        strncpy(args, buff, sizeof(char) * MAXDATA);
        buff = strtok(NULL, ">");
-       in_file = fopen(buff, "r");
-       out_file = fopen(user_input, "w");
+       strip_leading_space(buff);
+       out_file = fopen(buff, "w");
        break;
     }
 
@@ -138,7 +161,10 @@ void main_shell(){
       }
 
       // Command execution
-      char **split_args = mkargs(user_input);
+      char **split_args = mkargs(input_to_modify);
+      if (command_type == NO_REDIR){ // FIXME temp fix to make parsing work! Shouldn't be in final product
+        split_args = mkargs(user_input);
+      }
       if (execvp(cmd, split_args) == -1){
         perror("exec");
         exit(1);
