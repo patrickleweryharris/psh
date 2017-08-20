@@ -1,8 +1,0 @@
-LICENSE
-Makefile
-README.md
-docs
-out.txt
-psh
-src
-tests
